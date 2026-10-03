@@ -9,12 +9,16 @@ load_dotenv()
 
 def main():
     print("Hello from langchain-course!")
-    information = "Elon Musk"
+    information = """
+        Elon Musk
+    """
 
     summary_template = """
-        given the information {information} about a person, I want you to tell:
+        given the person:  {information}, I want you to tell:
         1. A short summary of the person in 2-3 sentences.
         2. two interesting facts about the person.
+        Use only the information provided. If it is not enough, say so.
+
     """
 
     summary_prompt_template = PromptTemplate(
@@ -24,9 +28,7 @@ def main():
 
     # Ollama cloud API (free tier), authenticated with OLLAMA_API_KEY
     ollama_llm = ChatOllama(
-        model="gpt-oss:120b",
-        base_url="https://ollama.com",
-        client_kwargs={"headers": {"Authorization": f"Bearer {os.environ.get('OLLAMA_API_KEY')}"}},
+        model="gemma3:4b",
         temperature=0,
     )
     chain = summary_prompt_template | ollama_llm
